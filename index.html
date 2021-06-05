@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <META Name="DatamineScript" Content="Version3" />
+    <META name="keywords" content="css3"/>
+    <link rel="stylesheet" href="style.css">
+    <title>Cubgem</title>
+
+ 
+    <script type="text/javascript">
+    var oDmApp= null;
+    var oScript = null;
+    function AutoConnect()
+        {
+            oScript = new ActiveXObject("StudioCommon.ScriptHelper");
+            oScript.initialize(window);
+            oDmApp = oScript.getApplication();
+         }
+    
+    function Cubagem()
+        {
+            
+            //seleccionar los bloques del modelo dentro de un perimetro
+
+            oDmApp.ParseCommand("selexy &IN="+tbMB.value+" &PERIM="+tbPoligono.value+" &OUT=__temp1 *X=XC *Y=YC @OUTSIDE=0 @CHECKROT=1 @PRINT=0");
+
+            //
+
+            if (rdAU.checked){oDmApp.ParseCommand("tongrad &IN=__temp1 &OUT=__temp2 *DENSITY=DENSITY *F1=AU @FACTOR=1 @TRENAME=0 @SETABSNT=1 @DENSITY=2.8 @COLUMN=0 @ROW=0 @BENCH=0 @KEYTOL=0.00001 @EXCEL=0");}
+
+            else{oDmApp.ParseCommand("tongrad &IN=__temp1 &OUT=__temp2 *DENSITY=DENSITY *F1=AU @FACTOR=1 @TRENAME=0 @SETABSNT=1 @DENSITY=2.8 @COLUMN=0 @ROW=0 @BENCH=0 @KEYTOL=0.00001 @EXCEL=0");}
+
+            var oDmFile = new ActiveXObject("DmFile.DmTableADO");
+            oDmFile.Open(oDmApp.ActiveProject.Folder + "\\__temp2.dm",true);
+            oDmFile.MoveTo(1);
+
+            var volume=oDmFile.GetNamedColumn("VOLUME")
+            var massa=oDmFile.GetNamedColumn("TONNES")
+            
+            if (rdAU.checked) {var teor=oDmFile.GetNamedColumn("AU")}
+            else {var teor=oDmFile.GetNamedColumn("CU")}
+            
+            oDmFile.Close()
+
+            tbVol.value=volume
+            tbMassa.value=massa
+            tbTeor.value=teor
+
+            oDmApp.ParseCommand("delete-file '__temp1' 'yes'")
+
+            alert("Proceso Finalisado");
+
+            //atribuir los resultados
+    
+        }
+
+        function DisplayBrowser() 
+        {
+            oDmBrowser = oDmApp.ActiveProject.Browser;
+            oDmBrowser.TypeFilter = oScript.DmFileType.dmNothing;
+            oDmBrowser.Show(false);
+            return oDmBrowser.FileName;
+        }
+
+
+
+
+    function btnBrowse1_onclick() 
+        {
+            tbMB.value = DisplayBrowser();
+            oScript.makeFieldsPicklist(tbMB);
+        }
+
+    function btnBrowse2_onclick() 
+        {
+            tbPoligono.value = DisplayBrowser();
+            oScript.makeFieldsPicklist(tbPoligono);
+        }
+
+</script>
+</head>
+<body onload="AutoConnect()">
+    <table>
+
+        <tr><td colspan="3" align="center"><img src="san-marcos.jpg" width=400px height=200px></td></tr>
+    <tr>
+    <td colspan="3" ><h3>Script de Prueba</h3></td>
+    </tr>
+    <tr>
+        <td>Modelo de Bloques</td>
+        <td><input type="text" id="tbMB"</td>
+        <td><input id="buscar" type="button" value="Browse ..." name="btnBrowse1" LANGUAGE=javascript onclick=" return btnBrowse1_onclick()"</td>
+    </tr>
+
+    <tr>
+        <td colspan="3" align="center"><input type="radio" name="rdTeor" id="rdAU" checked="checked">Cubar Au &nbsp;&nbsp; <input type="radio" name="rdTeor" id="rdCU" </td>Cubar CU
+    </tr>
+
+    <tr>
+        <td> Poligono Limite </td>
+        <td><input type="text" id="tbPoligono"></td>
+        <td><input id="buscar" type="button" value="Browse ..." name="btnBrowse2" LANGUAGE=javascript   onclick=" return btnBrowse2_onclick()"</td>
+    </tr>
+
+    <tr>
+    <td colspan="3" align="center"><input id="botones" type="button" value="Executar" onclick="return Cubagem()"> </td>
+    </tr>
+    <tr>
+        <td><b>Masa:</b></td>
+        <td colspan="2"><input type="text" id="tbMassa" disabled="disabled">t</td>
+    </tr>
+    <tr>
+        <td><b>Volumen:</b></td>
+        <td colspan="2"><input type="text" id="tbVol" disabled="disabled">m3</td>
+    </tr>
+    <tr>
+        <td><b>Ley Media:</b></td>
+        <td colspan="2"><input type="text" id="tbTeor" disabled="disabled">%</td>
+    </tr>
+    <tr>
+        <td colspan="3"><h3>IDL Mining</h3></td>
+    </tr>
+   </table>
+
+</body>
+</html>

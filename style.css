@@ -1,0 +1,59 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+#botones  
+{
+    font-size:25px;
+    font-family:Verdana,Helvetica;
+    font-weight:bold;
+    color:white;
+    background:rgb(71, 160, 233);
+    border:0px;
+    width:auto;
+    height:auto;
+    border-radius: 4px;
+}
+
+#buscar
+{   
+    width: 200px;
+    padding: 10px 20px;
+    margin: 20px;
+}
+
+input[type=text] {
+    width: 80%;
+    padding: 10px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    font-size: 20px;
+  }
+
+
+table 
+{
+    width:100%;
+    padding: 0px;
+    margin: 0px; 
+}
+
+h3 
+{
+    font-weight: bold;
+    font-size: 25px;
+    font-family: Arial;
+    background-color: rgb(71, 160, 233);
+    text-align: center;
+    padding: 1.5% 0;
+    color: #ffffff;
+    min-height: 30px;   
+}
+
+td 
+{
+    min-width: 200px;
+    min-height: 40px;
+    font-size: 25px;
+} 
+
